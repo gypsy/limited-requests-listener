@@ -22,6 +22,12 @@ public class LimitedRequestListener implements HttpChannel.Listener {
 	}
 
 	@Override
+	public void onRequestBegin(Request request) {
+		// set the number of requests as an attribute to help correlate exceptions to closed connections
+		request.setAttribute("org.eclipse.jetty.LimitedRequestListener.RequestCount", request.getHttpChannel().getRequests());
+	}
+
+	@Override
 	public void onResponseBegin(Request request) {
 		long requests = request.getHttpChannel().getRequests();
 		// After X responses, forcibly set connection close on response
